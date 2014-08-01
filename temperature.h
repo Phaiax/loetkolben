@@ -11,10 +11,11 @@
 #include <stdint.h>
 
 
-extern uint16_t temp;
+extern uint16_t temp_value;
+extern uint16_t temp_for_display;
 extern uint8_t new_temp_available;
 
-
+void temperature_update();
 
 
 
