@@ -17,24 +17,35 @@ uint8_t rot_seg4;
 uint16_t next_rot_timer = 0;
 uint8_t current_rot = 0;
 
+uint8_t is_rotating = 0;
 
 void uint_for_rotation(uint16_t nr) {
 	rot_seg4 = nr % 10;
 	rot_seg3 = ((nr - rot_seg4)/10) % 10;
 	rot_seg2 = ((nr - rot_seg3*10 - rot_seg4)/100) % 10;
 	rot_seg1 = ((nr - rot_seg2 * 100 - rot_seg3*10 - rot_seg4)/1000) % 10;
+	is_rotating = 1;
 
+}
+
+void stop_rotation() {
+	is_rotating = 0;
 }
 
 
 void rotation_update() {
 	next_rot_timer ++;
-	if(next_rot_timer == 1000) {
+	if(next_rot_timer == 3000) {
 		next_rot_timer = 0;
 
 		current_rot++;
-		if(current_rot == 5)
+		if(current_rot == 2)
 			current_rot = 0;
+
+		if(is_rotating == 0)
+			return;
+
+		// now toogle
 
 		switch(current_rot){
 		case 0:

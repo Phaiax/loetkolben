@@ -14,7 +14,7 @@
  * Set number to display via rotation
  */
 void uint_for_rotation(uint16_t nr);
-
+void stop_rotation();
 /**
  * Call this in main loop
  */

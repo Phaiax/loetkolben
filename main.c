@@ -28,10 +28,11 @@ int main(void) {
 
 	uint8_t i = 0; // count up number
 
-	uint16_t test = 391;
+	uint16_t test = 1234;
 	uint_for_rotation(test);
 
-	start_temperature_read();
+	//start_temperature_read();
+	start_trim_read();
 
 	while(1) {
 
@@ -41,11 +42,19 @@ int main(void) {
 
 		if(counter % 1000 == 0) {
 			i++;
-			if(current_rot == 4){
+			if(current_rot == 1){
+				if(new_trim_available) {
+					new_trim_available = 0;
+					stop_rotation();
+					uint_for_display(trim_value);
+					start_trim_read();
+
+				}
 
 				if(new_temp_available) {
 					new_temp_available = 0;
-					uint_for_rotation(temp);
+					stop_rotation();
+					uint_for_display(temp);
 					start_temperature_read();
 
 				}

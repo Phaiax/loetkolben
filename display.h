@@ -15,13 +15,25 @@
 
 #define SEG_4 0x01
 #define SEG_2 0x02
-#define SEG_1 0x04
+#define SEG_5 0x04
+#define SEG_7 0x08
+#define SEG_6 0x10
+#define SEG_1 0x20
+#define SEG_3 0x40
+#define SEG_DOT 0x80
+//#define SEG_NUMMASK 0xEF
+
+/*#define SEG_4 0x08
+#define SEG_2 0x08
+#define SEG_1 0x08
 #define SEG_3 0x08
-#define SEG_DOT 0x10
-#define SEG_6 0x20
-#define SEG_7 0x40
-#define SEG_5 0x80
-#define SEG_NUMMASK 0xEF
+#define SEG_DOT 0x80
+#define SEG_6 0x08
+#define SEG_7 0x08
+#define SEG_5 0x08
+//#define SEG_NUMMASK 0xEF
+*/
+
 
 /*
  # 1 #
@@ -49,6 +61,7 @@
 void display_update();
 void display_init();
 
+void uint_for_display();
 
 /**
  * Write to these variables to set the displayed value

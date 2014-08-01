@@ -20,6 +20,14 @@ uint8_t dot3;
 uint8_t nextsegtimer = 0;
 uint8_t currentseg = 0;
 
+void uint_for_display(uint16_t nr) {
+	nr_seg3 = nr % 10;
+	nr_seg2 = ((nr - nr_seg3)/10) % 10;
+	nr_seg1 = ((nr - nr_seg2*10 - nr_seg3)/100) % 10;
+	uint8_t thousands = ((nr - nr_seg1 * 100 - nr_seg2*10 - nr_seg3)/1000) % 10;
+	dot1 = thousands;
+}
+
 /**
  * Sets the 7-segment output pins so that <nr> is displayed
  */
@@ -79,7 +87,7 @@ void display_init() {
 	PORTA = 0;
 
 	DDRB = _BV(DDB0) | _BV(DDB1) | _BV(DDB2);   // selectors for multiplexing 7 segment displays
-	PORTB &= ~(_BV(PB0) | _BV(PB2) | _BV(PB2)); // switch all displays of
+	PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch all displays of
 	// ## !! each PIN can deliver a current of 40mA. One segment draws 20mA
 	//       so never switch on all 3 segments together
 }
@@ -94,19 +102,19 @@ void display_update() {
 		currentseg = (currentseg + 1) % 3;
 		switch(currentseg) {
 		case 0:
-			PORTB &= ~(_BV(PB0) | _BV(PB2) | _BV(PB2)); // switch of displays
+			PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch of displays
 			writenr(nr_seg1);
 			writedot(dot1);
-			PORTB |= _BV(PB0); // switch on display 1
+			PORTB |= _BV(PB1); // switch on display 1
 			break;
 		case 1:
-			PORTB &= ~(_BV(PB0) | _BV(PB2) | _BV(PB2)); // switch of displays
+			PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch of displays
 			writenr(nr_seg2);
 			writedot(dot2);
-			PORTB |= _BV(PB1); // switch on display 2
+			PORTB |= _BV(PB0); // switch on display 2
 			break;
 		case 2:
-			PORTB &= ~(_BV(PB0) | _BV(PB2) | _BV(PB2)); // switch of displays
+			PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch of displays
 			writenr(nr_seg3);
 			writedot(dot3);
 			PORTB |= _BV(PB2); // switch on display 3
