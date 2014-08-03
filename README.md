@@ -16,7 +16,7 @@ For more Information refer to the pcb, its full of comments.
 
 + galvanic seperated
 + Auto timeout (currently 2 min)
-+ Enought power (<30s to 300°C)
++ Enough power (<30s to 300°C)
 + Temperature Display
 + Switch heat on @ zero passing of sine wave.
 + On and off via software (turn trim resistor to left/right dead stop)
@@ -24,7 +24,7 @@ For more Information refer to the pcb, its full of comments.
 
 ##### Missing: 
 
-+ a nice controller (kalman or at least something which can filter the gwn of the measurements). I really would like to improve this, but currently I'm using 2032 od 2048 bytes of flash. An AtTiny861A would have been better :(
++ a nice controller (kalman or at least something which can filter the white noise of the measurements). I really would like to improve this, but currently I'm using 2032 od 2048 bytes of flash. An AtTiny861A would have been better :(
 
 ##### Build:
 
