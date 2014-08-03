@@ -9,7 +9,8 @@ For more Information refer to the pcb, its full of comments.
 
 
 
-====Features:====
+Features:
+========
 + galvanic seperated
 + Auto timeout (currently 2 min)
 + Enought power
@@ -18,7 +19,7 @@ For more Information refer to the pcb, its full of comments.
 + On and off via software (turn trim resistor to left/right dead stop)
 + Display in house temperature
 
-====Missing:====
+==== Missing: ====
 + a nice controller. I really would like to improve this, but currently I'm using 2032 od 2048 bytes of flash. An AtTiny861A would have been better :(
 
 
