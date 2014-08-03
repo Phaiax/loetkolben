@@ -15,6 +15,8 @@
 
 
 #define DISPLAY_TEMP 1
+#define DISPLAY_INTERNAL_TEMP 3
+#define DISPLAY_INTERNAL_TEMP_VALUE 5
 #define DISPLAY_TRIM 2
 #define DISPLAY_OFF 6
 
@@ -125,6 +127,15 @@ inline void writenr(uint8_t nr) {
 		break;
 	case 9:
 		PORTA |= NR_9;
+		break;
+	case ABC_O:
+		PORTA |= ABC_O;
+		break;
+	case ABC_F:
+		PORTA |= ABC_F;
+		break;
+	case ABC_U:
+		PORTA |= ABC_U;
 		break;
 	}
 }

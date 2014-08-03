@@ -9,7 +9,6 @@
 #include "adc.h"
 #include "temperature.h"
 #include "bitmacros.h"
-#include "rotdisplay.h"
 #include "trim.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -19,7 +18,7 @@ uint8_t adc_use = IS_FREE;
 uint16_t adc_array[NUM_VALUES_FOR_MEAN];
 uint8_t adc_array_position;
 
-
+uint8_t value_24V;
 
 
 ISR(ADC_vect){
@@ -49,8 +48,13 @@ ISR(ADC_vect){
 		case IS_TRIM:
 			trim_value = tmp / NUM_VALUES_FOR_MEAN;
 			new_trim_value_available = 1;
-
 			break;
+		case IS_INTERNAL_TEMP:
+			internal_temp_value = tmp / NUM_VALUES_FOR_MEAN;
+			new_internal_temp_available = 1;
+			break;
+		//case IS_24V:
+		//	break;
 		}
 
 
@@ -61,8 +65,17 @@ ISR(ADC_vect){
 			break;
 		case IS_TRIM:
 			adc_use = IS_FREE;
+			start_internal_temperature_read();
+			break;
+		case IS_INTERNAL_TEMP:
+			adc_use = IS_FREE;
+			//start_24V_read();
 			start_temperature_read();
 			break;
+		/*case IS_24V:
+			adc_use = IS_FREE;
+			start_temperature_read();
+			break;*/
 		}
 
 	}

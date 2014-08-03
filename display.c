@@ -22,8 +22,7 @@ uint8_t dot3;
 
 uint8_t what_to_display = DISPLAY_OFF;
 
-uint8_t nextsegtimer = 0;
-uint8_t currentseg = 0;
+
 
 
 uint16_t currval = 65000;
@@ -32,8 +31,8 @@ void uint_for_display(uint16_t nr) {
 		nr_seg3 = nr % 10;
 		nr_seg2 = ((nr - nr_seg3)/10) % 10;
 		nr_seg1 = ((nr - nr_seg2*10 - nr_seg3)/100) % 10;
-		uint8_t thousands = ((nr - nr_seg1 * 100 - nr_seg2*10 - nr_seg3)/1000) % 10;
-		dot1 = thousands;
+		//uint8_t thousands = ((nr - nr_seg1 * 100 - nr_seg2*10 - nr_seg3)/1000) % 10;
+		//dot1 = thousands;
 		currval = nr;
 	}
 }
@@ -48,8 +47,10 @@ void display_init() {
 	DDRA = 0xFF;
 	PORTA = 0;
 
-	DDRB = _BV(DDB0) | _BV(DDB1) | _BV(DDB2);   // selectors for multiplexing 7 segment displays
-	PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch all displays of
+	sbi(DDRB, DDB0);
+	sbi(DDRB, DDB1);
+	sbi(DDRB, DDB2);
+	PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch all displays off
 	// ## !! each PIN can deliver a current of 40mA. One segment draws 20mA
 	//       so never switch on all 3 segments together
 
@@ -57,17 +58,15 @@ void display_init() {
 	// TCNT1 = 0; // actual timer value
 	TC1H = 0;
 	OCR1A = 85;
-	TC1H = 0;
 	OCR1B = 170;
-	TC1H = 0;
 	OCR1C = 255; // represents timers TOP value, so will be set to zero after this
-	TC1H = 0;
 	OCR1D = 254; // use this for third, because C has no interrupt
 
 	// Interrupts (use sbi, because TIMSK is shared with Timer0):
-	sbi(TIMSK, OCIE1A);
-	sbi(TIMSK, OCIE1B);
-	sbi(TIMSK, OCIE1D);
+	TIMSK |= (_BV(OCIE1A) | _BV(OCIE1B) | _BV(OCIE1D));
+	//sbi(TIMSK, OCIE1A);
+	//sbi(TIMSK, OCIE1B);
+	//sbi(TIMSK, OCIE1D);
 
 
 	// Using Timer/Counter 1 (TC1) to generate Interrupts to switch between segments
@@ -93,6 +92,12 @@ void auto_value() {
 	case DISPLAY_TEMP:
 		uint_for_display(temp_for_display);
 		break;
+	case DISPLAY_INTERNAL_TEMP:
+		uint_for_display(internal_temp_for_display);
+		break;
+	case DISPLAY_INTERNAL_TEMP_VALUE:
+		uint_for_display(internal_temp_value);
+		break;
 	case DISPLAY_TRIM:
 		uint_for_display(trim_for_display);
 		break;
@@ -104,32 +109,6 @@ void auto_value() {
  */
 void display_update() {
 	auto_value();
-	return;
-	nextsegtimer++;
-	if(nextsegtimer == 5) {
-		nextsegtimer = 0;
-		currentseg = (currentseg + 1) % 3;
-		switch(currentseg) {
-		case 0:
-			PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch of displays
-			writenr(nr_seg1);
-			writedot(dot1);
-			PORTB |= _BV(PB1); // switch on display 1
-			break;
-		case 1:
-			PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch of displays
-			writenr(nr_seg2);
-			writedot(dot2);
-			PORTB |= _BV(PB0); // switch on display 2
-			break;
-		case 2:
-			PORTB &= ~(_BV(PB0) | _BV(PB1) | _BV(PB2)); // switch of displays
-			writenr(nr_seg3);
-			writedot(dot3);
-			PORTB |= _BV(PB2); // switch on display 3
-			break;
-		}
-	}
 }
 
 

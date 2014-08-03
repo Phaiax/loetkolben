@@ -15,6 +15,12 @@ extern uint16_t temp_value;
 extern uint16_t temp_for_display;
 extern uint8_t new_temp_available;
 
+extern uint16_t internal_temp_value;
+extern uint16_t internal_temp_for_display;
+extern uint8_t new_internal_temp_available;
+
+
+
 void temperature_update();
 
 

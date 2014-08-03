@@ -13,25 +13,23 @@
 #include "bitmacros.h"
 
 #include "display.h"
-#include "rotdisplay.h"
 #include "temperature.h"
 #include "adc.h"
 #include "trim.h"
+#include "defines.h"
+#include "controller.h"
 
 
 uint16_t counter = 0;
-
+uint16_t timeout_counter = 0;
 
 int main(void) {
 	display_init();
+	control_init();
+
 
 	sei(); // enable global interrupts
 
-	uint8_t i = 0; // count up number
-
-	uint16_t test = 1234;
-	uint_for_rotation(test);
-	stop_rotation();
 
 	//start_temperature_read();
 	start_trim_read();
@@ -40,18 +38,19 @@ int main(void) {
 	while(1) {
 
 		counter++;
-		display_update();
-		rotation_update();
-		trim_update();
-		//temperature_update();
 
 
-		if(counter % 1000 == 0) {
-			i++;
+		if(counter % COUNTER_UPDATE_MODULO == 0) {
 
+			trim_update();
+			temperature_update();
+			control_update();
+			display_update();
 
-
-			i = 0;
+			timeout_counter++;
+			if(timeout_counter == TIMEOUT_TIME) {
+				dot2 = 0;
+			}
 
 		}
 	}
